@@ -1,0 +1,75 @@
+.custom-card{
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    background-color: #ffffff;
+    flex: 1;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+    flex-direction: column;
+    height: 100%;
+    display: flex;
+}
+
+.card-title-box{
+    background: #338BA8;
+    text-align: center;
+    font-weight: 500;
+    font-size: 13px;
+    color: #ffffff;
+    padding: 5px 0px;
+  }
+
+  .card-action-box{
+    background: #f5f5f5;
+    text-align: center;
+    font-weight: 500;
+    font-size: 13px;
+    /* color: #ffffff; */
+    padding: 5px 0px; 
+    /* display: flex;
+    justify-content: center;
+    gap: 5px; */
+  }
+
+  .ddClass {
+    display: flex;
+    min-height: 35px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .background > .ant-select  {
+    background-color: white;
+    border-radius: 5px;
+  }
+
+  .ZOMATO {
+    background: #cb202d;
+  }
+  .SWIGGY {
+    background: #FC8019;
+  }
+  .MAGICPIN {
+    background: #2A1288;
+  }
+
+  .chart-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    height: 100%;
+  }
+
+  .box-title-view {
+    display: flex;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background-color: #FFC20D;
+    color: #028940;
+    /* color: #ffffff;
+    background-image: linear-gradient(to right, #FFC20D, #028940); */
+  }

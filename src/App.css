@@ -1,0 +1,196 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+.disabled-mcd {
+    pointer-events: none;
+    opacity: 0.50;
+}
+
+/* Dashboard CSS */
+
+.justify-content-end{
+    justify-content: flex-end;
+}
+
+.mr-5px{
+    margin-right: 5px;
+}
+
+.main-primary-button{
+    background-color: #028940;
+    color: #FFC20D;
+}
+
+.filter-row {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    background-color: #ffffff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+.make-box {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    background-color: #ffffff;
+    /* padding: 15px; */
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.selected-stores-box{
+    background-color: #ffffff;
+    color: #ffffff;
+    height: 39px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 5px;
+    margin: 0 5px;
+    border: 1px solid #1E5162;
+    color: #1E5162;
+    text-wrap: nowrap;
+    font-size: 12px;
+}
+
+.componentHeight40{
+    height: 40px
+}
+
+.custom-dashboard-card{
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    background-color: #ffffff;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+    min-height: 160px;
+    overflow: hidden;
+}
+
+.custom-dashboard-card > .number-box{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.custom-dashboard-card > .title-box{
+    background-color: #028940;
+    color:#ffc20d;
+    font-size: 12px;
+    padding: 10px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.ant-menu-item-selected {
+    background-color: #FFC20D !important;
+}
+
+/* .ant-menu-root{
+    background-color: #028940!important;
+} */
+
+.ant-menu-title-content {
+    color: #ffffff !important;
+}
+
+.ant-menu-item{
+    color: #FFC20D;
+}
+
+li.ant-menu-item span{
+    color: #FFC20D !important;
+}
+
+li.ant-menu-item-selected span{
+    color: #028940 !important;
+}
+
+/* li.ant-menu-item > .ant-menu-item-icon{
+    color: #FFC20D !important;
+} */
+
+  
+.ant-table-thead > tr > th {
+    color: #028940 !important;
+    background-color: #FFC20D !important;
+    padding-block: 6px !important;
+}
+/* .ant-table-wrapper tfoot>tr>td {
+
+} */
+
+.ant-btn-primary {
+    background-color: #028940 !important;
+    color: #FFC20D !important;
+}
+.loginButton {
+    background-color: #315ba4d9 !important;
+    color: #ffffff !important;
+}
+.ant-pagination-item-active a {
+    color: #028940 !important;
+}
+.ant-pagination-item-active {
+    border-color: #028940 !important;
+}
+.ant-skeleton.ant-skeleton-element .ant-skeleton-image {
+    width: 100%;
+    /* height: 220px !important; */
+}
+.ant-skeleton.ant-skeleton-element {
+    width: 100% !important;
+}
+.card-action-box > .ddClass > .ant-select-single > .ant-select-selector {
+    border: 0 !important;
+    background-color: transparent;
+    box-shadow: none !important;
+}
+.card-action-box > div > .ddClass > .ant-select-single > .ant-select-selector {
+    border: 0 !important;
+    background-color: transparent;
+    box-shadow: none !important;
+}
+.box-title-view > div > .ddClass > .ant-select-single > .ant-select-selector {
+    border: 0 !important;
+    background-color: transparent;
+    box-shadow: none !important;
+}
+
+.box-title-view > .ant-select-single > .ant-select-selector {
+    border: 0 !important;
+    background-color: transparent;
+    box-shadow: none !important;
+    /* color: #028940 !important; */
+}
+.ant-tabs-nav {
+    margin: 0 !important;
+}
+.ant-tabs-nav .ant-tabs-tab {
+    background-color: #ffffff !important;
+}
+.ant-tabs-nav .ant-tabs-tab-active {
+    /* color: #028940 !important; */
+    background-color: #FFC20D !important;
+    border-bottom-color: #FFC20D !important;
+}
+.ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #028940 !important;
+    font-weight: 500 !important;
+}
+.ant-tabs .ant-tabs-tab:hover {
+    color: #028940 !important;
+}
+
+.full-height {
+    height: 'calc(100%-50px)' !important;
+}

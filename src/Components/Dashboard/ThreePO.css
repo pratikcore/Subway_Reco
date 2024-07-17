@@ -1,0 +1,17 @@
+.my-table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: max-content;
+  }
+  
+  .my-table-cell {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+
+  .table-container {
+    height: 100px; /* Adjust the height as per your requirement */
+    overflow-y: auto;
+    
+  }

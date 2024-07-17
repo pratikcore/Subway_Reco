@@ -1,0 +1,39 @@
+#custom-react-checkboxes div div {
+	text-align: left !important;
+	font-size: 12px !important;
+	box-shadow: none!important;
+}
+#custom-react-checkboxes div button {
+	background: white;
+	width: 100%;
+	height: 40px;
+	border-radius: 5px;
+	box-shadow: none!important;
+	border: 1px solid #d9d9d9;
+	padding: 5px 10px;
+}
+
+
+#custom-react-checkboxes div div div div div div {
+
+	background: white !important;
+	display: flex;
+	align-items: center;
+	/* //css-1vr111p-option */
+	
+}
+
+#custom-react-checkboxes div div div div div div {
+
+	background: transparent !important;
+	display: flex;
+	align-items: center;
+	/* //css-1vr111p-option */
+}
+
+#custom-react-checkboxes div div .css-1pcexqc-container .css-ik6y5r .css-333b5e div input {
+
+	margin-top: 0px;
+	/* background: transparent !important; */
+	/* //css-1vr111p-option */
+}
