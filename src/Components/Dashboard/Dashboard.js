@@ -269,7 +269,6 @@ const Dashboard = () => {
   };
   const handlethreePoAGregatorClick = (e) => {
     //   message.info('Click on menu item.');
-    console.log("click", e);
     setthreePoAGregatorClick(e);
   };
 
@@ -294,8 +293,9 @@ const Dashboard = () => {
 
   const handleDashClick = (e) => {
     //   message.info('Click on menu item.');
-    console.log("click", e);
     setDashboardType(e);
+    setthreePoAGregatorClick({label: "POS Sales",key: "POS Sales", value: 'POS Sales', icon: <UserOutlined />});
+    setstoreSalesClick({label: "POS Sales",key: "POS Sales", value: 'POS Sales', icon: <UserOutlined />});
   };
 
   const dashboardTypeDropdown = {
@@ -348,8 +348,6 @@ const Dashboard = () => {
     }
   };
 
-  console.log("dateRangeSelect", dateRangeSelect);
-
   const _3poToggleDownloadAndApi = (isDown) => {
     // !isDown && setSpinnerState((prev) => ({ ...prev, search: true }));
     isDown && dispatch(updateIsDownloadProgressbarToStore(true));
@@ -360,7 +358,6 @@ const Dashboard = () => {
       isDownload: isDown,
     })
       .then((res) => {
-        console.log("3PO table", res);
         if (isDown) {
           // const { data = "" } = res || {};
           // dispatch(updateIsDownloadProgressbarToStore(false));
@@ -393,57 +390,24 @@ const Dashboard = () => {
       })
   };
 
-  const treeData = [
-    {
-      title: "All",
-      key: "0-0",
-      children: [
-        {
-          title: "parent 1-0",
-          key: "0-0-0",
-          disabled: true,
-          children: [
-            {
-              title: "leaf",
-              key: "0-0-0-0",
-              disableCheckbox: true,
-            },
-            {
-              title: "leaf",
-              key: "0-0-0-1",
-            },
-          ],
-        },
-        {
-          title: "parent 1-1",
-          key: "0-0-1",
-          children: [
-            {
-              title: (
-                <span
-                  style={{
-                    color: "#1677ff",
-                  }}
-                >
-                  sss
-                </span>
-              ),
-              key: "0-0-1-0",
-            },
-          ],
-        },
-      ],
-    },
-  ];
-
   const totalSalesData = () => {
     let totalS = 0;
-    if (DashboardTableData?.sales > 0) {
+    if (DashboardTableData?.sales > 0 || DashboardTableData?.trmSalesData?.sales) {
       totalS = DashboardTableData?.sales
+      if (storeSales.key === 'POS Sales') {
+        totalS = DashboardTableData?.sales
+      } else if (storeSales.key === 'TRM Sales') {
+        totalS = DashboardTableData?.trmSalesData?.sales
+      }
     }
-    if (_3poTableData?.posSales > 0) {
-      totalS += _3poTableData?.posSales
+    if (_3poTableData?.posSales > 0 || _3poTableData?.threePOSales > 0) {
+      if (threePoAGregator?.key === "3PO Sales") {
+        totalS += _3poTableData?.threePOSales;
+      } else if (threePoAGregator?.key === "POS Sales") {
+        totalS += _3poTableData?.posSales
+      }
     }
+
     return (
       {
         actual: formatNumberToLakhsAndCrores(totalS),
@@ -451,6 +415,25 @@ const Dashboard = () => {
         totalSales: totalS
       } || {}
     );
+  };
+
+  const findSalesValue = (type) => {
+    let totalS = 0;
+
+    if (type === "Store Sales") {
+      if (storeSales.key === 'POS Sales') {
+        totalS = DashboardTableData?.sales
+      } else if (storeSales.key === 'TRM Sales') {
+        totalS = DashboardTableData?.trmSalesData?.sales
+      }
+    } else {
+      if (threePoAGregator?.key === "3PO Sales") {
+        totalS += _3poTableData?.threePOSales;
+      } else if (threePoAGregator?.key === "POS Sales") {
+        totalS += _3poTableData?.posSales
+      }
+    }
+    return totalS;
   };
 
 
@@ -577,14 +560,14 @@ const Dashboard = () => {
 
       <div>
         <div className="w-full flex flex-col">
-          <div className="w-full flex">
+          <div className="">
               <TotalSales
                 TotalSales={totalSalesData()?.actual || "0"}
                 mySale={{
                   inStore: {
                     title: "In-Store",
                     value:
-                      formatNumberToLakhsAndCrores(DashboardTableData?.sales) ||
+                      formatNumberToLakhsAndCrores(findSalesValue('Store Sales')) ||
                       "0",
                     onClick: () => {
                       console.log("In store data");
@@ -598,7 +581,7 @@ const Dashboard = () => {
                   three3PO: {
                     title: "Aggregator",
                     value:
-                      formatNumberToLakhsAndCrores(_3poTableData?.posSales) ||
+                      formatNumberToLakhsAndCrores(findSalesValue('Aggregator')) ||
                       "0",
                     onClick: () => {
                       console.log("Aggregator");
@@ -936,6 +919,7 @@ const Dashboard = () => {
               totalSale={totalSalesData()?.tooltip}
               // totalSaleNumber={totalSalesData()?.totalSales}
               DashboardTableData={DashboardTableData}
+              threePODATA={inThreePOCheckData}
             />
           ) : (
             <ThreePO checkedRawData={inThreePOCheckData} downloadReports={downloadReports} fieldToggleKey={

@@ -67,7 +67,7 @@
     display: flex;
     flex-direction: column;
     min-width: 200px;
-    min-height: 160px;
+    min-height: 100px;
     overflow: hidden;
 }
 
@@ -160,7 +160,11 @@ li.ant-menu-item-selected span{
     background-color: transparent;
     box-shadow: none !important;
 }
-.box-title-view > div > .ddClass > .ant-select-single > .ant-select-selector {
+.box-title-view > div > div > .ddClass > .ant-select-single {
+    height: 28px !important;
+    color: #028940;
+}
+.box-title-view > div > div > .ddClass > .ant-select-single > .ant-select-selector {
     border: 0 !important;
     background-color: transparent;
     box-shadow: none !important;
@@ -193,4 +197,34 @@ li.ant-menu-item-selected span{
 
 .full-height {
     height: 'calc(100%-50px)' !important;
+}
+
+.figureDiv {
+    padding: 10px;
+    /* height: 100%; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: antiquewhite; */
+}
+/* .card-title-box .ddClass .ant-select-single {
+    height: 28px !important;
+} */
+/* .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder { */
+.box-title-view > div > div > .ddClass > .ant-select-single.ant-select-show-arrow .ant-select-selection-item {
+    color: #028940 !important;
+    font-weight: bold !important;
+    font-size: larger !important;
+}
+.card-title-box .ddClass .ant-select-single .ant-select-selector {
+    
+    background-color: transparent !important;
+    border-width: 0px !important;
+    color: white !important;
+}
+.card-title-box .ddClass .ant-select-single.ant-select-open .ant-select-selection-item {
+    color: white !important;
+}
+.card-title-box .ddClass .ant-select-single .ant-select-arrow {
+    color: white !important;
 }

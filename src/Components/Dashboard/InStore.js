@@ -208,12 +208,16 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
 
   const salesPercentage = ({ totalSales = 2000, sales = 500 }) => {
     if (totalSales === "0") {
-      return 0
+      return 0.0000001
     }
 
     const percentage = (sales / totalSales) * 100;
     const result = Math.round(percentage.toFixed(2)) / 100;
-    return isNaN(result) ? 0 : result;
+    let value = isNaN(result) ? 0 : result;
+    if (value === 0 || value === 0.0 ) {
+      value = 0.0000001
+    }
+    return value;
   };
 
   // for (let letter of Object.values(tenderNameToLetter)) {
@@ -400,6 +404,7 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
   }
 
   const renderDD = (item, tenderName, type) => {
+    return null;
     // let type = 'dedn'
     // if (fieldToggleKey === "TRM Sales" || type === 'delta') {
     if (fieldToggleKey === "TRM Sales") {
@@ -770,7 +775,8 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
               <div className="w-full flex pt-1.5">
                 <div style={{width: '60%'}}>
                   <LineColumnBarChart
-                    height={fieldToggleKey === 'TRM Sales' ? "255px" : "222px"}
+                    // height={fieldToggleKey === 'TRM Sales' ? "255px" : "222px"}
+                    height={"222px"}
                     width={"100%"}
                     dataItems={tenderAndBankData(fieldToggleKey)}
                     xField={xFieldYField(fieldToggleKey).xField}
@@ -781,7 +787,7 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
                 {renderTotalSalesData()}
               </div>
             </div>
-            <div className="w-full make-box">
+            <div className="w-full make-box" style={{display: 'flex', flexDirection: 'column'}}>
               {/* <div className={`box-title-view gap-1`}>
                 <div><strong className="text-lg">Total Sales</strong></div>
                 <div><strong className="text-lg">({formatNumberToLakhsAndCrores(DashboardTableData?.sales)+"L"})</strong></div>
@@ -790,63 +796,21 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
                     onClick={() => allDownloadReport(null, null, fieldToggleKey === "TRM Sales" ? "TRMSales" : "POSSales")}
                   /></div>
               </div> */}
-               <div className={`box-title-view gap-1`}>
+               <div className={`box-title-view`}>
                 <div>
-                  <div className="w-full flex gap-1.5 justify-center">
-                  <div><strong className="text-lg">Delta</strong></div>
-                  <div><strong className="text-lg">({findDeltaValue()})</strong></div>
-                  <div><DownloadOutlined
-                      style={{ fontSize: 18, marginTop: 2}}
+                  <div className="w-full flex justify-center">
+                  {/* <div><strong className="text-lg">Delta</strong></div>
+                  <div><strong className="text-lg">({findDeltaValue()})</strong></div> */}
+                  {renderDeltaDD({},'','')}
+                  <div style={{display:'flex',justifyContent:'center'}}><DownloadOutlined
+                      style={{ fontSize: 18, }}
                       onClick={() => {downloadDelta()}}
                     /></div>
                   </div>
-                  {renderDeltaDD({},'','')}
                 </div>
               </div>
-              <div className="flex gap-1.5">
-                {/* {storeSalesData?.map((item, ind) => {
-                  return (
-                  <div className="w-full" key={`${ind}-${item.tenderName}`}>
-                    <CustomCardWithCharts
-                      cardType="vertical"
-                      cardHeight={"300px"}
-                      cardWidth={"300px"}
-                      chartContentWidth={"auto"}
-                      chartContentHeight={"auto"}
-                      cardContentHeight={"55%"}
-                      cardContentWidth={"auto"}
-                      renderDD={renderDD(item,item.tenderName, 'sales')}
-                      bottomTitle={item.tenderName}
-                      bottomTitleValue={
-                        formatNumberToLakhsAndCrores(item.sales) + "L"
-                      }
-                      CustomIcon={
-                        <DownloadOutlined
-                          style={{ cursor: "pointer", fontSize: "25px" }}
-                          onClick={() => allDownloadReport(item.tenderName, null, fieldToggleKey === "TRM Sales" ? "TRMSales" : "POSSales")}
-                        />
-                      }
-                      // chart={<LiquidChart width="170px" />}
-                      chart={
-                        // <LiquidChart
-                        //   width="120px"
-                        //   // style={{ height: 185, width: 160 }}
-                        //   percentage={calculatePercentage({
-                        //     total: totalSaleNumber,
-                        //     part: item.sales,
-                        //   }).toFixed(2)}
-                        // />
-                        <TinyChart
-                            percent={calculatePercentage({
-                                  total: DashboardTableData?.sales,
-                                  part: item.sales,
-                                })/100}
-                            width={120}
-                          />
-                      }
-                    />
-                  </div>
-                )})} */}
+                  {/* {renderDeltaDD({},'','')} */}
+              <div className="flex gap-1.5" style={{flex: 1}}>
                 {storeSalesData?.map((item, index) => {
                   return (
                   
@@ -856,16 +820,14 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
                       rightCardSideCss="mt-4"
                       chart={
                           <TinyChart
-                          // percent={salesPercentage({
-                          //     sales: fieldToggleKey === "TRM Sales" ? Number(item?.trmSalesData?.[deltaDropDown.filter((item) => item.isSelected === true)[0]?.value]) : Number(item?.[deltaDropDown.filter((item) => item.isSelected === true)[0]?.value]),
-                          //     totalSales: fieldToggleKey === "TRM Sales" ? storeSalesData?.trmSalesData?.[deltaDropDown.filter((item) => item.isSelected === true)[0]?.value] : Number(storeSalesData?.[deltaDropDown.filter((item) => item.isSelected === true)[0]?.value]),
-                          //   })}
                             percent={salesPercentage({
                               sales: fieldToggleKey === "TRM Sales" ? Number(item?.trmSalesData?.[deltaDropDown.filter((item) => item.isSelected === true)[0]?.value]) : Number(item?.[deltaDropDown.filter((item) => item.isSelected === true)[0]?.value]),
                               totalSales: fieldToggleKey === "TRM Sales" ? item?.trmSalesData?.sales : item?.sales,
                             })}
                           />
                       }
+                      // renderFigure={formatNumberToLakhsAndCrores(fieldToggleKey === "TRM Sales" ? Number(item?.trmSalesData?.[deltaDropDown.filter((item) => item.isSelected === true)[0]?.value]) : Number(item?.[deltaDropDown.filter((item) => item.isSelected === true)[0]?.value]))+"L"}
+                      renderFigure={formatNumberToLakhsAndCrores(Number(item?.[deltaDropDown.filter((item) => item.isSelected === true)[0]?.value]))+"L"}
                       renderDD={renderDD(item, item.tenderName, 'delta')}
                       bottomTitle={item.tenderName}
                       bottomTitleValue={findDeltaValue(item)}
@@ -875,6 +837,7 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
                           onClick={() => {downloadTenderReport(item)}}
                         />
                       }
+                      isApply={true}
                     />
                   </div>
                 )})}
@@ -896,17 +859,6 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
                     style={{height: '100%' }}
                   >
                     <CustomCardWithCharts
-                    // leftCardComponent={
-                    //     fieldToggleKey === "TRM Sales" && (
-                    //       <CustomWrapDropdown
-                    //         menuProps={
-                    //           item.tenderName === "CARD"
-                    //             ? trmCardTypeDropDown
-                    //             : trmUPITypeDropDown
-                    //         }
-                    //       />
-                    //     )
-                    //   }
                       chart={
                         <TinyChart
                             percent={salesPercentage({
@@ -916,6 +868,8 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
                             width={120}
                           />
                       }
+                      // renderFigure={formatNumberToLakhsAndCrores(fieldToggleKey === "TRM Sales" ? item?.trmSalesData?.reconciled : item?.reconciled)+"L"}
+                      renderFigure={formatNumberToLakhsAndCrores(item?.reconciled)+"L"}
                       renderDD={renderDD(item, item.tenderName, 'reconciled')}
                       bottomTitle={item.tenderName}
                       bottomTitleValue={formatNumberToLakhsAndCrores(fieldToggleKey === "TRM Sales" ? item?.trmSalesData?.reconciled : item?.reconciled) + "L"}
@@ -925,6 +879,7 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
                           onClick={() => allDownloadReport(item.tenderName, null, "Reconciled")}
                         />
                       }
+                      isApply={true}
                     />
                   </div>
                 ))}
@@ -950,17 +905,6 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
                       // title={<strong>{item.tenderName}</strong>}
                       cardWidth={"300px"}
                       rightCardSideCss="mt-4"
-                      // leftCardComponent={
-                      //   fieldToggleKey === "TRM Sales" && (
-                      //     <CustomWrapDropdown
-                      //       menuProps={
-                      //         item.tenderName === "CARD"
-                      //           ? trmCardTypeDropDown
-                      //           : trmUPITypeDropDown
-                      //       }
-                      //     />
-                      //   )
-                      // }
                       chart={
                         <TinyChart
                           percent={salesPercentage({
@@ -969,6 +913,8 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
                           })}
                         />
                       }
+                      // renderFigure={formatNumberToLakhsAndCrores(fieldToggleKey === "TRM Sales" ? item?.trmSalesData?.receipts : item?.receipts)+"L"}
+                      renderFigure={formatNumberToLakhsAndCrores(item?.receipts)+"L"}
                       renderDD={renderDD(item, item.tenderName, 'receipts')}
                       bottomTitle={item.tenderName}
                       bottomTitleValue={formatNumberToLakhsAndCrores(fieldToggleKey === "TRM Sales" ? item?.trmSalesData?.receipts : item?.receipts) + "L"}
@@ -993,23 +939,13 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
                   /></div>
               </div>
               <div className="flex gap-1.5 h-full" style={{flex: 1}}>
-                {storeSalesData?.map((item, index) => (
+                {storeSalesData?.map((item, index) => {
+                  return (
                   <div className="w-full">
                     <CustomCardWithCharts
                       // title={<strong>{item.tenderName}</strong>}
                       cardWidth={"500px"}
                       rightCardSideCss="mt-4"
-                      // leftCardComponent={
-                      //   fieldToggleKey === "TRM Sales" && (
-                      //     <CustomWrapDropdown
-                      //       menuProps={
-                      //         item.tenderName === "CARD"
-                      //           ? trmCardTypeDropDown
-                      //           : trmUPITypeDropDown
-                      //       }
-                      //     />
-                      //   )
-                      // }
                       chart={
                         <TinyChart
                           percent={salesPercentage({
@@ -1018,6 +954,8 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
                           })}
                         />
                       }
+                      // renderFigure={formatNumberToLakhsAndCrores(fieldToggleKey === "TRM Sales" ? item?.trmSalesData?.unreconciled : item?.unreconciled)+"L"}
+                      renderFigure={formatNumberToLakhsAndCrores(item?.unreconciled)+"L"}
                       renderDD={renderDD(item, item.tenderName , 'unreconciled')}
                       bottomTitle={item.tenderName}
                       bottomTitleValue={formatNumberToLakhsAndCrores(fieldToggleKey === "TRM Sales" ? item?.trmSalesData?.unreconciled : item?.unreconciled) + "L"}
@@ -1029,7 +967,7 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
                       }
                     />
                   </div>
-                ))}
+                )})}
               </div>
             </div>
 
@@ -1043,23 +981,13 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
                   /></div>
               </div>
               <div className="flex gap-1.5 h-full" style={{flex: 1}}>
-                {storeSalesData?.map((item, index) => (
+                {storeSalesData?.map((item, index) => {
+                  return (
                   <div className="w-full flex">
                     <CustomCardWithCharts
                       // title={<strong>{item.tenderName}</strong>}
                       cardWidth={"300px"}
                       rightCardSideCss="mt-4"
-                      // leftCardComponent={
-                      //   fieldToggleKey === "TRM Sales" && (
-                      //     <CustomWrapDropdown
-                      //       menuProps={
-                      //         item.tenderName === "CARD"
-                      //           ? trmCardTypeDropDown
-                      //           : trmUPITypeDropDown
-                      //       }
-                      //     />
-                      //   )
-                      // }
                       chart={
                         <TinyChart
                           percent={salesPercentage({
@@ -1068,6 +996,8 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
                           })}
                         />
                       }
+                      // renderFigure={formatNumberToLakhsAndCrores(fieldToggleKey === "TRM Sales" ? item?.trmSalesData?.charges : item?.charges)+"L"}
+                      renderFigure={formatNumberToLakhsAndCrores(item?.charges)+"L"}
                       renderDD={renderDD(item, item.tenderName, 'charges')}
                       bottomTitle={item.tenderName}
                       bottomTitleValue={formatNumberToLakhsAndCrores(fieldToggleKey === "TRM Sales" ? item?.trmSalesData?.charges : item?.charges) + "L"}
@@ -1079,7 +1009,7 @@ const InStore = ({ checkedRawData = [], fieldToggleKey = "POS Sales", allStoreDa
                       }
                     />
                   </div>
-                ))}
+                )})}
               </div>
             </div>
           </div>

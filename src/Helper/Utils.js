@@ -361,7 +361,11 @@ export const calculatePercentage = ({part, total}) => {
   }
 let result = (100 * Number(part)) / Number(total);
 
-  return isNaN(result) ? 0 : result;
+  let value = isNaN(result) ? 0 : result;
+    if (value === 0 || value === 0.0 ) {
+      value = 0.0000001
+    }
+    return value;
 };
 
 export const convertPercentage = (val1, max, min) => { 

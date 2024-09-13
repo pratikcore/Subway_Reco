@@ -27,10 +27,10 @@ const MainStoreComponent = () => {
 
   let allValueCheckboxSelectedFeatureOn = false;
 
-  // const stateClearFun = () => {
-  //   dispatch(updateStoreListAction([])); // when clear state then it should clear all the stores
-  //   dispatch(updateCurrentSelectStoreAction([])); // when clear state then it should clear all the stores
-  // };
+  const stateClearFun = () => {
+    dispatch(updateStoreListAction([])); // when clear state then it should clear all the stores
+    dispatch(updateCurrentSelectStoreAction([])); // when clear state then it should clear all the stores
+  };
 
   const [currentState, setCurrentState] = useState([]);
   const [currentStore, setCurrentStore] = useState([]);
@@ -41,19 +41,46 @@ const MainStoreComponent = () => {
     value: i.name,
   }));
 
-  useEffect(()=>{
-    console.log('===customStoreList======',customStoreList);
-  },[customStoreList])
-  useEffect(()=>{
-    console.log('===storeList======',storeList);
-  },[storeList])
-
   const customStateList = stateList?.map((i) => ({
     ...i,
     label: i.displayName,
     value: i.technicalName,
   }));
 
+  const onSelectStore = (v, date, isUpdate) => {
+    console.log("onSelectStore", v, currentStore.length);
+    if (v?.length === currentStore?.length) {
+      // for error
+      // dispatch(
+      //   updateErrorStateOfStateAndStoreAction({
+      //     ...selectStateAndStoreError,
+      //     storeError: false,
+      //   })
+      // );
+      setCurrentStore(v);
+      updateCurrentSelectStoreAction(v);
+      console.log('===if-===========',v);
+      // stateClearFun()
+      // return;
+    }
+    if (typeof v !== "function") {
+      let temp = v
+      if (v[0]?.value === '*') {
+        temp = v.slice(1)
+      }
+
+      dispatch(updateCurrentSelectStoreAction(temp));
+      dispatch(
+        updateErrorStateOfStateAndStoreAction({
+          ...selectStateAndStoreError,
+          storeError: false,
+        })
+      );
+      setCurrentStore(temp);
+      const getStoreCode = temp?.map((i) => i?.code);
+      getStoreCode && dispatch(updateStoreCodeAction(getStoreCode));
+    }
+  };
   const storeHandler = (v, date, isUpdate) => {
     console.log("store handler select", v, currentStore.length);
     if (v?.length === currentStore?.length) {
@@ -64,7 +91,7 @@ const MainStoreComponent = () => {
       //     storeError: false,
       //   })
       // );
-      setCurrentStore([]);
+      setCurrentStore(v);
       updateCurrentSelectStoreAction(v);
       console.log('===if-===========',v);
       // stateClearFun()
@@ -72,22 +99,22 @@ const MainStoreComponent = () => {
     }
     if (typeof v !== "function") {
       console.log('===if function-===========',v);
-      dispatch(updateCurrentSelectStoreAction(v));
+      let state = currentSelectStore.length === 0 ? v : currentSelectStore
+      dispatch(updateCurrentSelectStoreAction(state));
       dispatch(
         updateErrorStateOfStateAndStoreAction({
           ...selectStateAndStoreError,
           storeError: false,
         })
       );
-      setCurrentStore(v);
-      const getStoreCode = v?.map((i) => i?.code);
+      setCurrentStore(state);
+      const getStoreCode = state?.map((i) => i?.code);
       getStoreCode && dispatch(updateStoreCodeAction(getStoreCode));
     }
   };
 
   const stateHandler = (v, date) => {
     if (v?.length === 0) {
-      console.log('====v?.length === 0=====');
       // for error
       dispatch(
         updateErrorStateOfStateAndStoreAction({
@@ -97,14 +124,12 @@ const MainStoreComponent = () => {
       );
       setCurrentState([]);
       updateCurrentSelectStateAction(v);
-      // return;
-      // stateClearFun();
+      stateClearFun();
       // console.log("stte list data funn instial", v);
     }
 
     let payload = [];
     if (typeof v !== "function") {
-      console.log('=====typeof v !== "function"=====', currentStore);
       dispatch(updateCurrentSelectStateAction(v));
       payload = v?.map((i) => i?.technicalName);
       dispatch(
@@ -116,7 +141,6 @@ const MainStoreComponent = () => {
       setCurrentState(v);
       setCurrentStore([]);
     } else {
-      console.log('=====else=====');
       dispatch(
         updateErrorStateOfStateAndStoreAction({
           ...selectStateAndStoreError,
@@ -222,8 +246,6 @@ const MainStoreComponent = () => {
       customDate
     );
 
-    console.log('=========main store como========', currentSelectState);
-
   }, [stateList, dateRangeSelect[1]]);
 
   return (
@@ -255,7 +277,7 @@ const MainStoreComponent = () => {
           </div>
           <div>
             <StoreFeatureCheckboxesComp
-                colourOptions={customStoreList}
+                colourOptions={storeList}
                 value={
                   // currentSelectStore
                   // [{city: "GHAZIABAD",code: "73036-1-0",displayName: "73036-1-0-Opulent Mall Ghaziabad",label: "73036-1-0-Opulent Mall Ghaziabad",name: "73036-1-0-Opulent Mall Ghaziabad",posDataSync: true,state: "GHAZIABAD",technicalName: "73036-1-0",value: "73036-1-0-Opulent Mall Ghaziabad"}]
@@ -266,7 +288,7 @@ const MainStoreComponent = () => {
                 isDisabled={!currentState.length > 0}
                 placeholder={"Select Store"}
                 buttonLabel="Store"
-                onChange={storeHandler}
+                onChange={onSelectStore}
                 checkboxNotDisabled={true}
                 allValueCheckboxSelectedFeatureOn={
                   allValueCheckboxSelectedFeatureOn

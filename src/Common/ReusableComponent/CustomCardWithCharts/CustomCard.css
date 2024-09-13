@@ -33,15 +33,15 @@
 
   .ddClass {
     display: flex;
-    min-height: 35px;
+    /* min-height: 35px; */
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
   }
 
-  .background > .ant-select  {
-    background-color: white;
-    border-radius: 5px;
+  .background > .ant-select > .ant-select-selector {
+    border: 0px !important;
+    box-shadow: none !important;
   }
 
   .ZOMATO {

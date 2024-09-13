@@ -434,11 +434,15 @@ const Reconciliation = () => {
 
   const salesPercentage = ({ totalSales = 2000, sales = 500 }) => {
     if (totalSales === "0") {
-      return 0
+      return 0.0000001;
     }
     const percentage = (sales / totalSales) * 100;
-    let result = Math.round(percentage.toFixed(2)) / 100
-    return isNaN(result) ? 0 : result;
+    let result = Math.round(percentage.toFixed(2)) / 100;
+    let value = isNaN(result) ? 0 : result;
+    if (value === 0 || value === 0.0 ) {
+      value = 0.0000001
+    }
+    return value;
   };
 
   const chartFieldsValues = (item, type = 1) => {
@@ -583,7 +587,7 @@ const Reconciliation = () => {
     })
   }
 
-  const renderDD = (item, tenderName, type) => {
+  const renderDD = (item, tenderName, type, figureType = 1) => {
 
       let cardData =  [{}];
       if (type === 'Delta') {
@@ -625,9 +629,9 @@ const Reconciliation = () => {
             break;
         }
       }
-      
+      if (figureType === 1)
       return (
-        <div className="ddClass">
+        <div className="ddClass" >
           <Select
             defaultValue={temp}
             value={temp}
@@ -637,9 +641,10 @@ const Reconciliation = () => {
             }}
             options={type === 'Delta' ? deltaDropDown : chargesDropDown}
           />
-          <strong style={{ marginRight: 10}}>{formatNumberToLakhsAndCrores(value)+"L"}</strong>
+          {/* <strong style={{ marginRight: 10}}>{formatNumberToLakhsAndCrores(value)+"L"}</strong> */}
         </div>
       );
+      else return value
     }
 
   const downloadDelta = () => {
@@ -954,6 +959,7 @@ const Reconciliation = () => {
                         />
                       }
                       bottomTitle="Total Sales"
+                      renderFigure={formatNumberToLakhsAndCrores(item?.threePOSales) + "L"}
                       bottomTitleValue={formatNumberToLakhsAndCrores(item?.threePOSales) + "L"}
                       CustomIcon={
                         <DownloadOutlined
@@ -981,6 +987,7 @@ const Reconciliation = () => {
                     />
                   }
                   bottomTitle="Receivables"
+                  renderFigure={formatNumberToLakhsAndCrores(item?.threePOReceivables) + "L"}
                   bottomTitleValue={formatNumberToLakhsAndCrores(item?.threePOReceivables) + "L"}
                   CustomIcon={
                     <DownloadOutlined
@@ -1018,8 +1025,8 @@ const Reconciliation = () => {
                     // </div>
                   }
                   // bottomTitle="All Charges"
-                  // renderSelection={renderDD(item, item.tenderName, 'Charges')}
-                  renderSelection={renderDD(item, item.tenderName, 'Charges')}
+                  renderFigure={formatNumberToLakhsAndCrores(renderDD(item, item.tenderName, 'Charges', 2))+"L"}
+                  renderSelection={renderDD(item, item.tenderName, 'Charges',1)}
                   CustomIcon={
                     <DownloadOutlined
                       style={{ cursor: "pointer", fontSize: "25px" }}
@@ -1045,6 +1052,7 @@ const Reconciliation = () => {
                     />
                   }
                   bottomTitle="Reconciled"
+                  renderFigure={formatNumberToLakhsAndCrores(item?.reconciled) + "L"}
                   bottomTitleValue={formatNumberToLakhsAndCrores(item?.reconciled) + "L"}
                   CustomIcon={
                     <DownloadOutlined
@@ -1084,7 +1092,7 @@ const Reconciliation = () => {
             </div> */}
             <div className="w-full">
             {dashboardData?.threePOData.map((item, index) => (
-                <div className="" key={index} style={{height: '100%' }}>
+                <div key={index}>
                 {/* <CustomCardWithCharts
                   key={index}
                   title={<strong>{item.tenderName}</strong>}
@@ -1128,7 +1136,8 @@ const Reconciliation = () => {
                         />
                   }
                   // bottomTitle="Delta"
-                  renderSelection={renderDD(item, item.tenderName, 'Delta')}
+                  renderFigure={formatNumberToLakhsAndCrores(renderDD(item, item.tenderName, 'Delta',2))+"L"}
+                  renderSelection={renderDD(item, item.tenderName, 'Delta',1)}
                   CustomIcon={
                     <DownloadOutlined
                       style={{ cursor: "pointer", fontSize: "25px" }}

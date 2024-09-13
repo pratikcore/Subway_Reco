@@ -22,6 +22,9 @@ const CustomCardWithCharts = ({
   chatBoxHeight,
   renderDD = <div />,
   renderSelection = null,
+  renderFigure = null,
+  isApply = false,
+  titleDD = null,
 }) => {
   const config = {
     data,
@@ -41,21 +44,30 @@ const CustomCardWithCharts = ({
       <div className={`custom-card`}>
         <div
           style={{
-            flex: 1,
+            height: '100%',
+            display: isApply ? 'flex' : 'block',
+            justifyContent: isApply ? 'center' : 'flex-start'
+            // flex: 1,
             // width: chartContentWidth,
             // height: chartContentHeight,
           }}
         >
           {title ? <div
             className={`card-title-box ${title?.props?.children}`}
+            style={{display : titleDD ? 'flex' : 'block',justifyContent:'center', alignItems:'center'}}
           >
-            {title}
+            {title} {titleDD}
           </div> : null }
-          <div className="chart-box">
+          {/* <div className="chart-box">
             {chart}
-          </div>
+          </div> */}
+          {renderFigure && (
+            <div className="figureDiv">
+              <strong className="text-lg">{renderFigure}</strong>
+            </div>
+          )}
         </div>
-        <div
+        {/* <div
           style={{
             // width: cardContentWidth,
             // height: cardContentHeight,
@@ -69,7 +81,7 @@ const CustomCardWithCharts = ({
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
         <div
           className={`card-action-box`}
         >
@@ -104,15 +116,16 @@ const CustomCardWithCharts = ({
                 // </div>
               }
               
-              <p>{bottomTitle} <strong className="text-sm">{bottomTitleValue}</strong></p>
+              <p>{bottomTitle}</p>
+              {/* <strong className="text-sm">{bottomTitleValue}</strong> */}
               {CustomIcon}{" "}
             </>
           )}
-          {renderSelection && (
+          
+          {(renderSelection || titleDD) && (
             <div>{renderSelection}
             {CustomIcon}</div>
           )}
-          
         </div>
       </div>
     </>

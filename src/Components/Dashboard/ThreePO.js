@@ -143,21 +143,29 @@ const ThreePO = ({
 
   const salesPercentage = ({ totalSales = 2000, threePoSales = 500 }) => {
     if (totalSales === "0" || totalSales === 0) {
-      return 0
+      return 0.000001
     }
     const percentage = (threePoSales / totalSales) * 100;
     const result = Math.round(percentage.toFixed(2)) / 100;
-    return isNaN(result) ? 0 : result;
+    let value = isNaN(result) ? 0 : result;
+    if (value === 0 || value === 0.0 ) {
+      value = 0.000001
+    }
+    return value;
 
   };
 
   const totalSalesPercentage = ({ totalSales = 2000, threePoSales = 500 }) => {
     if (totalSales === "0" || totalSales === 0) {
-      return 0
+      return 0.000001
     }
     const percentage = (threePoSales / totalSales) * 100;
     let result = Math.round(percentage.toFixed(2));
-    return isNaN(result) ? 0 : result;
+    let value = isNaN(result) ? 0 : result;
+    if (value === 0 || value === 0.0 ) {
+      value = 0.0000001
+    }
+    return value;
   };
 
   const items = [
@@ -549,12 +557,12 @@ const ThreePO = ({
               // labelRender={({label, value, key, disabled, title})=>{return (<strong style={{overflow:'hidden', textOverflow:'ellipsis'}}>{value}</strong>)}}
               // style={{maxWidth: '70%'}}
             />
-          <p style={{ marginRight: 10}}>{formatNumberToLakhsAndCrores(value)+"L"}</p>
+          {type !== 'Delta' &&  <p style={{ marginRight: 10}}>{formatNumberToLakhsAndCrores(value)+"L"}</p>}
         </div>
       );
     }
 
-    const countValue = (item) => {
+    const countValue = (item, type = 1) => {
 
       let cardData =  chargeSelection.filter((charge) => charge.name === item?.tenderName)
       let val = cardData[0]?.value
@@ -587,14 +595,18 @@ const ThreePO = ({
       }
 
       let all = fieldToggleKey === "3PO Sales" ?
-      Number(_3poTableData?.threePOCharges) + Number(_3poTableData?.promo) +  Number(_3poTableData?.threePODiscounts) + Number(_3poTableData?.threePOFreebies) + Number(_3poTableData?.threePOCommission)
+      Number(item?.allThreePOCharges)
+      // Number(_3poTableData?.threePOCharges) + Number(_3poTableData?.promo) +  Number(_3poTableData?.threePODiscounts) + Number(_3poTableData?.threePOFreebies) + Number(_3poTableData?.threePOCommission)
     : 
-      Number(_3poTableData?.posCharges) + Number(_3poTableData?.promo) +  Number(_3poTableData?.posDiscounts) + Number(_3poTableData?.posFreebies) + Number(_3poTableData?.posCommission)
+      Number(item?.allPOSCharges)
+      // Number(_3poTableData?.posCharges) + Number(_3poTableData?.promo) +  Number(_3poTableData?.posDiscounts) + Number(_3poTableData?.posFreebies) + Number(_3poTableData?.posCommission)
 
-      return salesPercentage({
-        totalSales: all,
-        threePoSales: value,
-      })
+      if (type === 1) 
+        return salesPercentage({
+          totalSales: all,
+          threePoSales: value,
+        });
+      else return all;
     }
 
     const onChargeDownload = (item) => {
@@ -653,22 +665,53 @@ const ThreePO = ({
     return (
       (_3poTableData?.threePOData !== undefined && _3poTableData?.threePOData !== null ) ? 
       <div className="w-full flex gap-4">
-        <div className="w-full">
+        <div className="w-full" style={{width: '100%'}}>
           <div className="filter-row w-full flex">
+          <div style={{width: '75%'}}>
             <LineColumnBarChart
-              // width={"100%"}
+              width={"100%"}
+              height={410}
               dataItems={inThreePOTenderGraphData}
               xField={xFieldYField(fieldToggleKey).xField}
               yField={xFieldYField(fieldToggleKey).yField}
             />
+            </div>
+            <div style={{width: '25%', marginTop: 100}} >
+              {_3poTableData?.threePOData?.map((item) => {
+                return (
+                  <div style={{paddingInline: 7, alignItems: "center"}}>
+                      <div style={{gap: 2, display: 'flex', flex: 1}}>
+                        <strong>{item.tenderName}</strong>
+                        <p style={{flex: 1, textAlign:'end'}}>{formatNumberToLakhsAndCrores(fieldToggleKey === '3PO Sales' ? item?.threePOSales : item?.posSales) + "L"}</p>
+                        <DownloadOutlined
+                              style={{ fontSize: 14, marginTop: 1, marginLeft: 5 }}
+                              onClick={() => allDownloadReport(item.tenderName, null, fieldToggleKey === "3PO Sales" ? "ThreePOSales" : "POSSales")}
+                            />
+                      </div>
+                  </div>
+                )
+              })}
+            </div>
           </div>
           <div className="filter-row w-full">
+          {/* <div className={`box-title-view gap-1`}>
+                <div>
+                  <div className="w-full flex justify-center p-0">
+                  <div><strong className="text-lg">Delta</strong></div>
+                  </div>
+                </div>
+              </div> */}
             <div className="flex gap-3.5">
               {_3poTableData?.threePOData.map((item, index) => (
-                <div key={index} style={{flex: 1}}>
+                // <div key={index} style={{flex: 1}}>
                 <CustomCardWithCharts
                   key={index}
                   title={<strong className="text-lg">{item.tenderName}</strong>}
+                  titleDD={renderDD(item, item.tenderName, 'Delta')}
+                  // title={<>
+                  //   <strong className="text-lg">{item.tenderName}</strong>
+                  //   {renderDD(item, item.tenderName, 'Delta')}
+                  //   </>}
                   // cardWidth={"300px"}
                   // cardContentWidth="20%"
                   // chartContentWidth="80%"
@@ -682,32 +725,44 @@ const ThreePO = ({
 
                   rightCardSideCss="mt-4"
                   chart={
-                      // <PieChart
-                      //   angleField={"value"}
-                      //   colorField={"type"}
-                      //   chartData={DeltaFieldsValues(item)}
-                      //   width={100}
-                      // />
-                      <TinyChart
-                          percent={findDeltaValue(item)}
-                        />
-                    }
+                    <TinyChart
+                        percent={findDeltaValue(item)}
+                      />
+                  }
                   // bottomTitle="Delta"
-                  renderSelection={renderDD(item, item.tenderName, 'Delta')}
+                  // sectionTitle={<p className="">Delta</p>}
+                  renderFigure={formatNumberToLakhsAndCrores(item[item?.selectedDelta])+"L"}
+                  // renderSelection={renderDD(item, item.tenderName, 'Delta')}
                   CustomIcon={
                     <DownloadOutlined
                       style={{ cursor: "pointer", fontSize: "25px" }}
-                      onClick={() => {allDownloadReport(item?.tenderName, null, item.selectedDelta)}}
+                      onClick={() => {
+                        let val = 'posVsThreePO'
+                        switch (item.selectedDelta) {
+                          case 'posVsThreePO':
+                            val = "POSVsThreePO";
+                            break;
+                          case 'receivablesVsReceipts':
+                            val = "ReceivablesVsReceipts";
+                            break;
+                          case 'promo':
+                            val = "Promo";
+                            break;
+                          default:
+                            break;
+                        };
+                        allDownloadReport(item?.tenderName, null, val);
+                      }}
                     />
                   }
                 />
-                </div>
+                // </div>
               ))}
             </div>
           </div>
         </div>
-        <div className="filter-row">
-            <div className="flex gap-3.5">
+        <div className="filter-row"  style={{width: '48%'}}>
+            {/* <div className="flex gap-3.5">
               {_3poTableData?.threePOData.map((item, index) => (
                 <div key={index} style={{flex: 1}}>
                   <CustomCardWithCharts
@@ -739,27 +794,27 @@ const ThreePO = ({
                   />
                 </div>
               ))}
-            </div>
-            <div className="flex gap-3.5 mt-4 flex-wrap">
+            </div> */}
+            <div className="flex gap-3.5 flex-wrap">
               {_3poTableData?.threePOData.map((item, index) => (
-                <div key={index} style={{flex: 1}}>
+                // <div key={index} style={{width: '48%'}}>
                 <CustomCardWithCharts
                   title={<strong className="text-lg">{item.tenderName}</strong>}
                   rightCardSideCss="overflow-auto"
                   chart={
-                    <TinyChart
-                      // width={50}
-                      percent={salesPercentage({
-                        totalSales: fieldToggleKey === '3PO Sales' ? _3poTableData?.threePOReceivables : _3poTableData?.posReceivables,
-                        threePoSales: fieldToggleKey === '3PO Sales' ? item?.threePOReceivables : item?.posReceivables,
-                      })}
-                    />
+                      <TinyChart
+                        percent={salesPercentage({
+                          totalSales: fieldToggleKey === '3PO Sales' ? _3poTableData?.threePOReceivables : _3poTableData?.posReceivables,
+                          threePoSales: fieldToggleKey === '3PO Sales' ? item?.threePOReceivables : item?.posReceivables,
+                        })}
+                      />
                   }
                   bottomTitle="Receivables"
                   // bottomTitleValue={item.posSales.toFixed(2)}
                   bottomTitleValue={
                     formatNumberToLakhsAndCrores(fieldToggleKey === '3PO Sales' ? item?.threePOReceivables : item?.posReceivables) + "L"
                   }
+                  renderFigure={formatNumberToLakhsAndCrores(fieldToggleKey === '3PO Sales' ? item?.threePOReceivables : item?.posReceivables) + "L"}
                   CustomIcon={
                     <DownloadOutlined
                       style={{ cursor: "pointer", fontSize: "25px" }}
@@ -767,7 +822,7 @@ const ThreePO = ({
                     />
                   }
                 />
-                </div>
+                // </div>
               ))}
             </div>
             <div className="flex gap-3.5 mt-4 flex-wrap">
@@ -788,6 +843,7 @@ const ThreePO = ({
                   bottomTitleValue={
                     formatNumberToLakhsAndCrores(item.reconciled) + "L"
                   }
+                  renderFigure={formatNumberToLakhsAndCrores(item.reconciled) + "L"}
                   CustomIcon={
                     <DownloadOutlined
                       style={{ cursor: "pointer", fontSize: "25px" }}
@@ -853,6 +909,7 @@ const ThreePO = ({
                   renderSelection={renderDD(item, item.tenderName, 'Charges')}
                   // bottomTitle="All Charges"
                   // bottomTitleValue={'abc'}
+                  renderFigure={formatNumberToLakhsAndCrores(countValue(item, 2))+"L"}
                   CustomIcon={
                     <DownloadOutlined
                       style={{ cursor: "pointer", fontSize: "25px" }}
